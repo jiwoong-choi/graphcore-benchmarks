@@ -1,0 +1,4 @@
+training_results_v2.0/*
+logs/*
+**/venv/*
+nohup.out
