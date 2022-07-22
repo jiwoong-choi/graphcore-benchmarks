@@ -37,23 +37,24 @@ function download-from-link () {
 function unpack-training-file () {
   mkdir -p ${TRAIN_DIR}
   cd ${TRAIN_DIR}
+  download-from-link ${TRAINING_FILE} "https://image-net.org/data/ILSVRC/2012/ILSVRC2012_img_train.tar" 147897477120
   echo "Unpacking ${TRAINING_FILE} ..."
   tar -xvf "${TRAINING_FILE}" &> /dev/null
   ls *.tar | while read NAME; do mkdir -p "${NAME%.tar}"; cd "${NAME%.tar}"; echo "Unpacking ${NAME} ..."; tar -xvf ../$NAME &> /dev/null; cd ..; rm $NAME; done
   cd ${DATASET_DIR}
+  rm ${TRAINING_FILE}
 }
 
 function unpack-validation-file () {
   mkdir -p ${VAL_DIR}
   cd ${VAL_DIR}
+  download-from-link ${VALIDATION_FILE} "https://image-net.org/data/ILSVRC/2012/ILSVRC2012_img_val.tar" 6744924160
   echo "Unpacking ${VALIDATION_FILE} ..."
   tar -xvf "${VALIDATION_FILE}" &> /dev/null
   wget -qO- https://raw.githubusercontent.com/soumith/imagenetloader.torch/master/valprep.sh | bash
   cd ${DATASET_DIR}
+  rm ${VALIDATION_FILE}
 }
-
-download-from-link ${TRAINING_FILE} "https://image-net.org/data/ILSVRC/2012/ILSVRC2012_img_train.tar" 147897477120
-download-from-link ${VALIDATION_FILE} "https://image-net.org/data/ILSVRC/2012/ILSVRC2012_img_val.tar" 6744924160
 
 if [ ! -d ${TRAIN_DIR} ]; then
   unpack-training-file
