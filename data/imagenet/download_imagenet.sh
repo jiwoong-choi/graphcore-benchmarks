@@ -10,6 +10,7 @@ if [ ! -d ${DATASET_DIR} ]; then
   exit
 fi
 
+SCRIPT_DIR=`pwd`
 TRAINING_FILE="${DATASET_DIR}/ILSVRC2012_img_train.tar"
 VALIDATION_FILE="${DATASET_DIR}/ILSVRC2012_img_val.tar"
 TRAIN_DIR="${DATASET_DIR}/train"
@@ -59,8 +60,8 @@ function unpack-validation-file () {
 if [ ! -d ${TRAIN_DIR} ]; then
   unpack-training-file
 else
-  TRAIN_DIR_SIZE="$(du --max-depth 0 ${TRAIN_DIR})"
-  if [[ ${TRAIN_DIR_SIZE} == 146087396 ]]; then
+  TRAIN_DIR_SIZE="$(du --max-depth 0 ${TRAIN_DIR} | awk '{print $1}')"
+  if [[ ${TRAIN_DIR_SIZE} -eq 146087396 ]]; then
     echo "${TRAINING_FILE} already unpacked."
   else
     echo "${TRAIN_DIR} is found, but not complete. (expected size was 146087396, but got ${TRAIN_DIR_SIZE})"
@@ -72,22 +73,29 @@ fi
 if [ ! -d ${VAL_DIR} ]; then
   unpack-validation-file
 else
-  VAL_DIR_SIZE="$(du --max-depth 0 ${VAL_DIR})"
-  if [[ ${VAL_DIR_SIZE} == 6655288 ]]; then
+  VAL_DIR_SIZE="$(du --max-depth 0 ${VAL_DIR} | awk '{print $1}')"
+  if [[ ${VAL_DIR_SIZE} -eq 6655292 ]]; then
     echo "${VALIDATION_FILE} already unpacked."
   else
-    echo "${VAL_DIR} is found, but not complete. (expected size was 6655288, but got ${VAL_DIR_SIZE})"
+    echo "${VAL_DIR} is found, but not complete. (expected size was 6655292, but got ${VAL_DIR_SIZE})"
     rm -rf ${VAL_DIR}
     unpack-validation-file
   fi
 fi
 
+cd ${SCRIPT_DIR}
+VENV_PATH="${SCRIPT_DIR}/venv"
 BBOX_INFO_PATH="${DATASET_DIR}/imagenet_2012_bounding_boxes.csv"
 TFRECORD_DIR="${DATASET_DIR}/tfrecord"
 download-from-link ${BBOX_INFO_PATH} https://repository.prace-ri.eu/git/Data-Analytics/Benchmarks/-/raw/bfea8c2c69078a98c35a6e774809e7d9cc807874/ImageNetUseCaseV2/Dataset/Metadata/imagenet_2012_bounding_boxes.csv?inline=false 29709928
-virtualenv -p python3.6 venv
-source venv/bin/activate
-pip install tensorflow==1.15.2
+if [ ! -d ${VENV_PATH} ]; then
+  virtualenv -p python3.6 venv
+  source ${VENV_PATH}/bin/activate
+  pip install tensorflow==1.15.2
+else
+  echo "${VENV_PATH} already exists. Skipping virtual environment setup."
+  source ${VENV_PATH}/bin/activate
+fi
 mkdir -p ${TFRECORD_DIR}
 python imagenet-to-tfrecord.py \
   --bounding_box_file ${BBOX_INFO_PATH} \
