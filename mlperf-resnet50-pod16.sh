@@ -6,7 +6,7 @@ fi
 
 DATA_DIR=$1
 WORKING_DIR=`pwd`
-TARGET_POPLAR_SDK_VERSION="2.5.1+1001"
+TARGET_POPLAR_SDK_VERSION="2.6.0+1074"
 POPLAR_SDK_VERSION="$(python3 -c 'import json; import os; print(json.load(open(os.path.join(os.environ["POPLAR_SDK_ENABLED"], "..", "manifest.json")))["details"]["version"])')"
 TRAINING_DIR="${WORKING_DIR}/training_results_v2.0/Graphcore/benchmarks/resnet/implementations/tensorflow"
 
@@ -20,10 +20,11 @@ else
 fi
 
 if [ ! -d "${WORKING_DIR}/training_results_v2.0" ]; then
+  echo "Cloning the repository mlcommons/training_results_v2.0 ..."
   git clone https://github.com/mlcommons/training_results_v2.0 ${WORKING_DIR}/training_results_v2.0 &> /dev/null
 fi
 
-ENV_PATH="${WORKING_DIR}/venv-${POPLAR_SDK_VERSION}"
+ENV_PATH="${WORKING_DIR}/envs/resnet-tensorflow-${POPLAR_SDK_VERSION}"
 if [ ! -d $ENV_PATH ]; then
    echo "Setting up Python3 virtual environment at $ENV_PATH"
    virtualenv -p python3 $ENV_PATH &> /dev/null
