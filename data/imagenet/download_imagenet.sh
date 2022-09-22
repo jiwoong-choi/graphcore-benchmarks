@@ -10,7 +10,7 @@ if [ ! -d ${DATASET_DIR} ]; then
   exit
 fi
 
-SCRIPT_DIR=`pwd`
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 TRAINING_FILE="${DATASET_DIR}/ILSVRC2012_img_train.tar"
 VALIDATION_FILE="${DATASET_DIR}/ILSVRC2012_img_val.tar"
 TRAIN_DIR="${DATASET_DIR}/train"
@@ -89,7 +89,7 @@ BBOX_INFO_PATH="${DATASET_DIR}/imagenet_2012_bounding_boxes.csv"
 TFRECORD_DIR="${DATASET_DIR}/tfrecord"
 download-from-link ${BBOX_INFO_PATH} https://repository.prace-ri.eu/git/Data-Analytics/Benchmarks/-/raw/bfea8c2c69078a98c35a6e774809e7d9cc807874/ImageNetUseCaseV2/Dataset/Metadata/imagenet_2012_bounding_boxes.csv?inline=false 29709928
 if [ ! -d ${VENV_PATH} ]; then
-  virtualenv -p python3.6 venv
+  virtualenv -p python3.6 ${VENV_PATH}
   source ${VENV_PATH}/bin/activate
   pip install tensorflow==1.15.2
 else

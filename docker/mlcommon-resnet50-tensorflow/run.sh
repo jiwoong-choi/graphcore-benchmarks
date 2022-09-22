@@ -12,10 +12,10 @@ for ((n=1; n<5; n++)); do
   TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
   LOG_DIR="${WORKING_DIR}/logs/${TIMESTAMP}"
   mkdir -p ${LOG_DIR}
-  OUTPUT_FILE="${WORKING_DIR}/logs/${TIMESTAMP}/output.log"
+  OUTPUT_FILE="${LOG_DIR}/output.log"
 
   echo "Running ResNet50 training with seed ${SEED} ..."
-  echo "(To watch the progress, run 'tail -f ${LOG_DIR}/log.txt' on a new terminal)"
+  echo "(To watch the progress, run 'tail -f ${LOG_DIR}/log.txt' or 'tail -f ${OUTPUT_FILE}')"
   POPLAR_ENGINE_OPTIONS='{"target.hostSyncTimeout":"900"}' \
   POPLAR_RUNTIME_OPTIONS='{"streamCallbacks.maxLookahead":"unlimited"}' \
   poprun \

@@ -1,5 +1,13 @@
 .idea
 training_results_v2.0/*
 logs/*
+**/venv/*
+**/__pycache__/*
 **/nohup.out
 envs/*
+**/*.zip
+**/tf1_ckpt/*
+**/tf2_ckpt/*
+**/wiki/*
+**/results/*
+**/*.log
