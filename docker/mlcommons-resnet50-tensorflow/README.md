@@ -4,19 +4,19 @@
 
 
 ```bash
-docker build -t graphcore-bmt:mlcommon-resnet50-tensorflow .
+docker build -t graphcore-bmt:mlcommons-resnet50-tensorflow .
 ```
 
 ## 2. Create a docker container
 
 ```bash
-gc-docker -- -d --rm -it --name mlcommon_resnet50_tensorflow -p <host-port>:<container-port> -v <imagenet-tfrecord-path>:/dataset graphcore-bmt:mlcommon-resnet50-tensorflow
+gc-docker -- -d --rm -it --name mlcommons_resnet50_tensorflow -p <host-port>:<container-port> -v <imagenet-tfrecord-path>:/dataset graphcore-bmt:mlcommons-resnet50-tensorflow
 ```
 
 ## 3. Execute docker container shell
 
 ```bash
-docker exec -it mlcommon_resnet50_tensorflow bash
+docker exec -it mlcommons_resnet50_tensorflow bash
 ```
 
 ## 4. Run training script on the container shell
