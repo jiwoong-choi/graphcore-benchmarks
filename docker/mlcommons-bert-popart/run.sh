@@ -1,14 +1,15 @@
-if [[ "$#" -gt 1 ||  "$#" == 0 ]]; then
-  echo "Usage: $0 WIKIPEDIA_PACKED512_PATH"
+if [[ "$#" -gt 2 ||  "$#" -lt 2 ]]; then
+  echo "Usage: $0 TRAINING_DATA_DIR VALIDATION_DATA_DIR"
   exit
 fi
 
-DATA_DIR=$1
+TRAINING_DATA_DIR=$1
+VALIDATION_DATA_DIR=$2
 WORKING_DIR=`pwd`
 source /venv/bin/activate || exit
 
 for ((n=1; n<5; n++)); do
-  SEED=$((n << 32));
+  SEED=$((n << 16));
   TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
   LOG_DIR="${WORKING_DIR}/logs/${TIMESTAMP}"
   mkdir -p ${LOG_DIR}
@@ -20,7 +21,8 @@ for ((n=1; n<5; n++)); do
     --config configs/pod16-closed.json \
     --seed ${SEED} \
     --log-dir ${LOG_DIR} \
-    --input-files ${DATA_DIR}/*.tfrecord \
+    --input-files ${TRAINING_DATA_DIR}/* \
+    --on-the-spot-validation-files ${VALIDATION_DATA_DIR}/* \
   &> ${OUTPUT_FILE}
 done
 

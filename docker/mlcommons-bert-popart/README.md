@@ -25,11 +25,11 @@ This step might take more than an hour. The output file `nohup.out` will give yo
 You can exit the container shell while this process is running, and come back for the final results.
 
 ```bash
-nohup bash run.sh /dataset &
+nohup bash run.sh /dataset/jan2020_three_seq_per_pack_with_duplications /dataset/jan2020_packed_eval_10k &
 ```
 
 ## 5. Check the results on the container shell
 
 ```bash
-find logs -name log.txt -exec tail -n 15 {} +
+find logs -name output.log -exec tail -n 15 {} +
 ```
