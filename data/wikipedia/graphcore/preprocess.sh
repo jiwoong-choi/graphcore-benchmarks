@@ -31,22 +31,22 @@ export LC_ALL=C.UTF-8
 echo "Extracting wikidump ..."
 EXTRACT_DIR="${DATASET_DIR}/intermediate/extracted"
 mkdir -p "${EXTRACT_DIR}"
-#python -m wikiextractor.WikiExtractor -b 100M --processes 64 -o "${EXTRACT_DIR}" "${WIKIDUMP_XML_PATH}"
+python -m wikiextractor.WikiExtractor -b 100M --processes 64 -o "${EXTRACT_DIR}" "${WIKIDUMP_XML_PATH}"
 
 echo "Preprocessing extracted data ..."
 PREPROCESS_DIR="${DATASET_DIR}/intermediate/preprocessed"
 mkdir -p "${PREPROCESS_DIR}"
-#python "${SCRIPT_DIR}/preprocess.py" --input-file-path "${EXTRACT_DIR}" --output-file-path "${PREPROCESS_DIR}"
+python "${SCRIPT_DIR}/preprocess.py" --input-file-path "${EXTRACT_DIR}" --output-file-path "${PREPROCESS_DIR}"
 
 echo "Tokenizing with sequence length 128 ..."
 SL128_DIR="${DATASET_DIR}/sl128"
 mkdir -p "${SL128_DIR}"
-# python "${SCRIPT_DIR}/tokenize_wikipedia.py" "${PREPROCESS_DIR}" "${SL128_DIR}" --sequence-length 128 --mask-tokens 20
+python "${SCRIPT_DIR}/tokenize_wikipedia.py" "${PREPROCESS_DIR}" "${SL128_DIR}" --sequence-length 128 --mask-tokens 20
 
 echo "Tokenizing with sequence length 384 ..."
 SL384_DIR="${DATASET_DIR}/sl384"
 mkdir -p "${SL384_DIR}"
-# python "${SCRIPT_DIR}/tokenize_wikipedia.py" "${PREPROCESS_DIR}" "${SL384_DIR}" --sequence-length 384 --mask-tokens 56
+python "${SCRIPT_DIR}/tokenize_wikipedia.py" "${PREPROCESS_DIR}" "${SL384_DIR}" --sequence-length 384 --mask-tokens 56
 
 echo "Tokenizing with sequence length 512 ..."
 SL512_DIR="${DATASET_DIR}/sl512"
@@ -54,10 +54,10 @@ mkdir -p "${SL512_DIR}"
 python "${SCRIPT_DIR}/tokenize_wikipedia.py" "${PREPROCESS_DIR}" "${SL512_DIR}" --sequence-length 512 --mask-tokens 76
 
 cd "${SL128_DIR}"
-# for f in *.tfrecord; do python -m tfrecord.tools.tfrecord2idx $f `basename $f .tfrecord`.index; done
+for f in *.tfrecord; do python -m tfrecord.tools.tfrecord2idx $f `basename $f .tfrecord`.index; done
 
 cd "${SL384_DIR}"
-# for f in *.tfrecord; do python -m tfrecord.tools.tfrecord2idx $f `basename $f .tfrecord`.index; done
+for f in *.tfrecord; do python -m tfrecord.tools.tfrecord2idx $f `basename $f .tfrecord`.index; done
 
 cd "${SL512_DIR}"
 for f in *.tfrecord; do python -m tfrecord.tools.tfrecord2idx $f `basename $f .tfrecord`.index; done
